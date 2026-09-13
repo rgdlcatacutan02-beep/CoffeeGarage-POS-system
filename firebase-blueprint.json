@@ -1,0 +1,132 @@
+{
+  "entities": {
+    "Branch": {
+      "title": "Branch",
+      "description": "Coordinates for multiple locations.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] }
+      },
+      "required": ["name"]
+    },
+    "Ingredient": {
+      "title": "Inventory Item",
+      "description": "Raw materials like beans, milk, cups.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "unit": { "type": "string", "enum": ["g", "ml", "pcs", "bottle"] },
+        "stock": { "type": "number" },
+        "minThreshold": { "type": "number" },
+        "branchId": { "type": "string" }
+      },
+      "required": ["name", "unit", "stock", "branchId"]
+    },
+    "Recipe": {
+      "title": "Recipe",
+      "description": "Mapping product to ingredients.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string" },
+        "ingredients": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ingredientId": { "type": "string" },
+              "quantity": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "Customer": {
+      "title": "Customer Loyalty Profile",
+      "type": "object",
+      "properties": {
+        "phone": { "type": "string" },
+        "name": { "type": "string" },
+        "points": { "type": "number" },
+        "history": { "type": "array" }
+      },
+      "required": ["phone"]
+    },
+    "Shift": {
+      "title": "Cashier Shift",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "branchId": { "type": "string" },
+        "startTime": { "type": "string" },
+        "endTime": { "type": "string" },
+        "openingBalance": { "type": "number" },
+        "closingBalance": { "type": "number" },
+        "status": { "type": "string", "enum": ["open", "closed"] }
+      }
+    },
+    "Order": {
+      "title": "Smart Order",
+      "type": "object",
+      "properties": {
+        "items": { "type": "array" },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "preparing", "ready", "completed", "cancelled"] },
+        "paymentMethod": { "type": "string", "enum": ["cash", "gcash", "maya", "card"] },
+        "branchId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "tableId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "Expense": {
+      "title": "Business Expense",
+      "type": "object",
+      "properties": {
+        "category": { "type": "string" },
+        "amount": { "type": "number" },
+        "description": { "type": "string" },
+        "date": { "type": "string" },
+        "branchId": { "type": "string" }
+      }
+    },
+    "Payment": {
+      "title": "Digital Payment Transaction",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string" },
+        "amount": { "type": "number" },
+        "method": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "AdminAccount": {
+      "title": "Admin Credentials",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["username", "password"]
+    }
+  },
+  "firestore": {
+    "/branches/{branchId}": { "schema": "Branch", "description": "Global branch config." },
+    "/branches/{branchId}/inventory/{ingredientId}": { "schema": "Ingredient", "description": "Branch-specific stock." },
+    "/recipes/{productId}": { "schema": "Recipe", "description": "Global recipes." },
+    "/customers/{customerId}": { "schema": "Customer", "description": "Loyalty database." },
+    "/shifts/{shiftId}": { "schema": "Shift", "description": "Daily shift logs." },
+    "/orders/{orderId}": { "schema": "Order", "description": "Smart transactions." },
+    "/expenses/{expenseId}": { "schema": "Expense", "description": "Running costs." },
+    "/payments/{paymentId}": { "schema": "Payment", "description": "Digital payment logs." },
+    "/categories/{categoryId}": { "schema": "Category", "description": "Menu categories." },
+    "/products/{productId}": { "schema": "Product", "description": "Menu items." },
+    "/settings/{settingId}": { "schema": "Settings", "description": "Shop and admin security settings." },
+    "/users/{userId}": { "schema": "User", "description": "Role-based permissions." },
+    "/staff/{staffId}": { "schema": "Staff", "description": "Local staff credentials." }
+  }
+}
